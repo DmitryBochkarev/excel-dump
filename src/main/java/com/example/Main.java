@@ -16,7 +16,7 @@ import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 public class Main {
-  static Logger logger = Logger.getLogger(Main.class.getName());
+  private static final Logger logger = Logger.getLogger(Main.class.getName());
 
   public static void main(String[] args) throws IOException {
     logger.setLevel(Level.ALL);
@@ -28,7 +28,7 @@ public class Main {
       input = Paths.get(args[0]);
       output = Paths.get(args[1]);
     } catch (ArrayIndexOutOfBoundsException ex) {
-      System.err.println("usage: excel-export input ouput");
+      System.err.println("usage: excel-export input output");
       return;
     }
 
@@ -108,13 +108,13 @@ public class Main {
 
   private static List<String> getPictures(Workbook wb, Sheet sheet, Cell cell) {
     if (wb instanceof HSSFWorkbook) {
-      return getHSSFPictures((HSSFWorkbook) wb, (HSSFSheet) sheet, (HSSFCell) cell);
+      return getHSSFPictures((HSSFSheet) sheet, (HSSFCell) cell);
     } else {
-      return getXSSFPictures((XSSFWorkbook) wb, (XSSFSheet) sheet, (XSSFCell) cell);
+      return getXSSFPictures((XSSFSheet) sheet, (XSSFCell) cell);
     }
   }
 
-  private static List<String> getHSSFPictures(HSSFWorkbook wb, HSSFSheet sheet, HSSFCell cell) {
+  private static List<String> getHSSFPictures(HSSFSheet sheet, HSSFCell cell) {
     List<String> pictures = new ArrayList<>(0);
 
     HSSFPatriarch drawing = sheet.getDrawingPatriarch();
@@ -138,7 +138,7 @@ public class Main {
     return pictures;
   }
 
-  private static List<String> getXSSFPictures(XSSFWorkbook wb, XSSFSheet sheet, XSSFCell cell) {
+  private static List<String> getXSSFPictures(XSSFSheet sheet, XSSFCell cell) {
     List<String> pictures = new ArrayList<>(0);
 
     XSSFDrawing drawing = sheet.getDrawingPatriarch();
