@@ -41,7 +41,7 @@ public class Main {
     try (
         InputStream file = new FileInputStream(input.toString());
         Workbook wb = WorkbookFactory.create(file);
-        Dumper out = DumperFactory.create(output, imagesDir)
+        Saver out = SaverFactory.create(output, imagesDir)
     ) {
       for (Sheet sheet : wb) {
         dumpPictures(imagesDir, sheet);
