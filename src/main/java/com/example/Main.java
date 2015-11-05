@@ -19,7 +19,7 @@ public class Main {
   private static final Logger logger = Logger.getLogger(Main.class.getName());
 
   public static void main(String[] args) throws IOException {
-    logger.setLevel(Level.ALL);
+    logger.setLevel(Level.SEVERE);
 
     Path input;
     Path output;
@@ -36,21 +36,27 @@ public class Main {
     Path imagesDir = Paths.get(output.toString() + "_images");
 
     Files.createDirectories(outputDir);
-    Files.createDirectories(imagesDir);
 
     try (
         InputStream file = new FileInputStream(input.toString());
         Workbook wb = WorkbookFactory.create(file);
         Saver out = SaverFactory.create(output, imagesDir)
     ) {
+      boolean isHasPictures = wb.getAllPictures().size() > 0;
+
+      if (isHasPictures) {
+        Files.createDirectories(imagesDir);
+      }
+
       for (Sheet sheet : wb) {
-        dumpPictures(imagesDir, sheet);
+        if (isHasPictures) {
+          dumpPictures(imagesDir, sheet);
+        }
 
         int rowStart = sheet.getFirstRowNum();
         int rowEnd = sheet.getLastRowNum();
 
         for (int rowNum = rowStart; rowNum <= rowEnd; rowNum++) {
-          logger.log(Level.INFO, "row {0}", rowNum);
           Row row = sheet.getRow(rowNum);
 
           if (row == null) {
@@ -63,12 +69,11 @@ public class Main {
           for (int cellNum = cellStart; cellNum < cellEnd; cellNum++) {
             Cell cell = row.getCell(cellNum, Row.CREATE_NULL_AS_BLANK);
 
-            logger.log(Level.INFO, "cell [{0}, {1}] format: {2}", new Object[]{rowNum, cellNum, cell.getCellStyle().getDataFormatString()});
             switch (cell.getCellType()) {
               case Cell.CELL_TYPE_STRING: {
                 String val = cell.getStringCellValue();
 
-                if (val.equals("")) {
+                if (val.equals("") && isHasPictures) {
                   List<String> pictures = getPictures(wb, sheet, cell);
                   out.writePictures(pictures);
                 } else {
@@ -90,8 +95,12 @@ public class Main {
               case Cell.CELL_TYPE_FORMULA:
                 out.writeCell(cell.getCellFormula());
               default: {
-                List<String> pictures = getPictures(wb, sheet, cell);
-                out.writePictures(pictures);
+                if (isHasPictures) {
+                  List<String> pictures = getPictures(wb, sheet, cell);
+                  out.writePictures(pictures);
+                } else {
+                  out.writeCell("");
+                }
               }
             }
           }

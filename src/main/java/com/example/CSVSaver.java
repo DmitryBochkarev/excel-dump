@@ -51,6 +51,6 @@ public class CSVSaver implements Closeable, Saver {
 
     String[] stringEntries = currentRow.toArray(new String[currentRow.size()]);
     out.writeNext(stringEntries);
-    currentRow = new ArrayList<>(0);
+    currentRow.clear();
   }
 }
