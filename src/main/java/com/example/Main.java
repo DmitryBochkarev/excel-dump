@@ -38,8 +38,7 @@ public class Main {
     Files.createDirectories(outputDir);
 
     try (
-        InputStream file = new FileInputStream(input.toString());
-        Workbook wb = WorkbookFactory.create(file);
+        Workbook wb = WorkbookFactory.create(new File(input.toString()));
         Saver out = SaverFactory.create(output, imagesDir)
     ) {
       boolean isHasPictures = wb.getAllPictures().size() > 0;
