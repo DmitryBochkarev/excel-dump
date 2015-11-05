@@ -33,8 +33,8 @@ public class CSVSaver implements Closeable, Saver {
   @Override
   public void writePictures(List<String> pictures) {
     String val = pictures.stream()
-        .map(pic -> Paths.get(imagesDir, pic).toString())
-        .collect(Collectors.joining(";"));
+                         .map(pic -> Paths.get(imagesDir, pic).toString())
+                         .collect(Collectors.joining(";"));
     writeCell(val);
   }
 

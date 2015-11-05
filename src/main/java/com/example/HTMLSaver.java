@@ -39,7 +39,7 @@ public class HTMLSaver implements Closeable, Saver {
     out.write(html().with(
         head().with(
             meta().withContent("text/html; charset=UTF-8")
-                .attr("http-equiv", "content-type"),
+                  .attr("http-equiv", "content-type"),
             style().withText("table,tr,td {border: 1px solid grey;}")
         ),
         body().with(
@@ -54,13 +54,13 @@ public class HTMLSaver implements Closeable, Saver {
   @Override
   public void writePictures(List<String> pictures) {
     currentRow.add(
-            td().with(
-                    pictures.stream()
-                            .map(pic ->
-                                    img().withSrc(Paths.get(imagesDir).getFileName().toString() + "/" + pic)
-                                            .attr("style", "max-width: 300px; max-height: 300px"))
-                            .collect(Collectors.toList())
-            )
+        td().with(
+            pictures.stream()
+                    .map(pic ->
+                             img().withSrc(Paths.get(imagesDir).getFileName().toString() + "/" + pic)
+                                  .attr("style", "max-width: 300px; max-height: 300px"))
+                    .collect(Collectors.toList())
+        )
     );
   }
 

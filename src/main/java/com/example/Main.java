@@ -152,10 +152,10 @@ public class Main {
       XSSFPicture picture = (XSSFPicture) shape;
       XSSFClientAnchor anchor = picture.getClientAnchor();
 
-      if (anchor.getCol1() <= cell.getColumnIndex() &&
-          anchor.getRow1() <= cell.getRowIndex() &&
-          anchor.getCol2() >= cell.getColumnIndex() &&
-          anchor.getRow2() >= cell.getRowIndex()) {
+      if ((anchor.getCol1() <= cell.getColumnIndex()) &&
+          (anchor.getRow1() <= cell.getRowIndex()) &&
+          (anchor.getCol2() >= cell.getColumnIndex()) &&
+          (anchor.getRow2() >= cell.getRowIndex())) {
         String filename = getXSSFPictureFilename(sheet, picture);
         pictures.add(filename);
       }
@@ -214,7 +214,7 @@ public class Main {
 
   private static String getHSSFPictureFilename(HSSFSheet sheet, HSSFPicture picture) {
     return sanitizeFileName(sheet.getSheetName() + "_" + picture.getPictureIndex() + "_" +
-        picture.getFileName() + "." + picture.getPictureData().suggestFileExtension());
+                                picture.getFileName() + "." + picture.getPictureData().suggestFileExtension());
   }
 
   private static String getXSSFPictureFilename(XSSFSheet sheet, XSSFPicture picture) {
@@ -223,12 +223,11 @@ public class Main {
   }
 
   private static String sanitizeFileName(String name) {
-    return name
-        .chars()
-        .mapToObj(i -> (char) i)
-        .map(c -> Character.isWhitespace(c) ? '_' : c)
-        .filter(c -> Character.isLetterOrDigit(c) || c == '-' || c == '_' || c == '.')
-        .map(String::valueOf)
-        .collect(Collectors.joining());
+    return name.chars()
+               .mapToObj(i -> (char) i)
+               .map(c -> Character.isWhitespace(c) ? '_' : c)
+               .filter(c -> Character.isLetterOrDigit(c) || c == '-' || c == '_' || c == '.')
+               .map(String::valueOf)
+               .collect(Collectors.joining());
   }
 }
